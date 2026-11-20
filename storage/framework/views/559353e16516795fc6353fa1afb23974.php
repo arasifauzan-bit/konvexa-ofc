@@ -4,18 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <title>Konvexa Official | Konveksi Murah Berkualitas</title>
+    <title>Konvexa Apparel | Konveksi Murah Berkualitas</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="<?php echo e(asset('favicon-konvexa.png')); ?>?v=1">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
+        * { font-family: 'DM Sans', system-ui, sans-serif; }
+
+        .hero-title {
+            color: #17283d;
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            font-weight: 600;
+            letter-spacing: -0.045em;
+            line-height: 1.08;
+        }
+
+        .hero-title span {
+            color: #17283d;
+            display: block;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: inherit;
+            margin-top: 0.03em;
+        }
+
+        .hero-section {
+            background:
+                radial-gradient(ellipse at 76% 40%, rgba(91, 163, 222, 0.22) 0%, rgba(91, 163, 222, 0.09) 26%, transparent 50%),
+                radial-gradient(ellipse at 34% 96%, rgba(105, 132, 201, 0.09), transparent 38%),
+                linear-gradient(180deg, #f9fafc 0%, #f4f6fa 56%, #fbfcfe 100%);
+        }
+
+        .hero-background-art {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hero-benefits {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.58) 55%, #fff 100%);
+        }
+
+        .hero-benefits > div {
+            padding-top: 12px;
+        }
+
+        .hero-product-frame {
+            position: relative;
+            isolation: isolate;
+            aspect-ratio: 1.08;
+        }
+
+        .hero-product-frame::before {
+            content: '';
+            position: absolute;
+            inset: 8% 5% 6%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, rgba(205, 229, 244, 0.9), rgba(220, 238, 249, 0.72) 48%, rgba(220, 238, 249, 0) 76%);
+            filter: blur(4px);
+        }
+
+        .hero-product-image {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            transform: scale(1.08);
+        }
 
         [x-cloak] { display: none !important; }
 
@@ -27,12 +92,21 @@
         ::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
 
         .fade-up {
-            animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: heroFadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
+        .hero-image-enter {
+            animation: heroSlideIn 1.7s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+        }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heroSlideIn {
+            from { opacity: 0; transform: translateX(56px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .product-image {
@@ -43,35 +117,18 @@
             transform: scale(1.04);
         }
 
-        .hero-overlay {
-            background: linear-gradient(
-                105deg,
-                rgba(10, 10, 10, 0.82) 0%,
-                rgba(10, 10, 10, 0.55) 50%,
-                rgba(10, 10, 10, 0.25) 100%
-            );
-        }
-
         .navbar-top {
             background: transparent;
             border-color: transparent;
+            box-shadow: none;
         }
 
         .navbar-scrolled {
-            background: rgba(255, 255, 255, 0.92);
-            border-color: rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(0, 0, 0, 0.07);
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-        }
-
-        .hero-image {
-            transform: scale(1.02);
-            transition: transform 10s ease;
-        }
-
-        #beranda:hover .hero-image {
-            transform: scale(1.06);
         }
 
         ::selection {
@@ -131,6 +188,13 @@
         .reveal-delay-6 { transition-delay: 0.48s; }
 
         @media (prefers-reduced-motion: reduce) {
+            .fade-up,
+            .hero-image-enter {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+
             .reveal,
             .reveal-scale,
             .reveal-left,
@@ -139,20 +203,13 @@
                 transform: none;
                 transition: none;
             }
+
         }
 
         .search-panel {
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 28px 90px rgba(15, 23, 42, 0.2), 0 1px 3px rgba(15, 23, 42, 0.06);
         }
 
-        /* AI Chat - simple */
-        .chat-window {
-            box-shadow: 0 16px 48px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.04);
-        }
-        .chat-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: #d4d4d4 transparent;
-        }
     </style>
 </head>
 
@@ -161,21 +218,13 @@
     x-data="{
         mobileMenu: false,
         searchOpen: false,
+        contactOpen: false,
         searchQuery: '',
         active: 'beranda',
         scrolled: false,
         _scrollRaf: null,
 
-        // AI Chat
-        chatOpen: false,
-        chatMessage: '',
-        chatLoading: false,
-        chatHint: true,
-        chatMessages: [
-            { role: 'bot', text: 'Halo! Saya Konvexa AI. Tanya saja soal produk, harga, kategori, atau cara order.' },
-        ],
-
-        products: <?php echo \Illuminate\Support\Js::from($searchProducts)->toHtml() ?>,
+        categories: <?php echo \Illuminate\Support\Js::from($searchCategories)->toHtml() ?>,
 
         setActive(id) {
             this.active = id;
@@ -205,80 +254,25 @@
             this.searchQuery = '';
         },
 
-        formatPrice(n) {
-            return 'Rp' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        openContact() {
+            this.searchOpen = false;
+            this.mobileMenu = false;
+            this.contactOpen = true;
         },
 
-        get filteredProducts() {
+        closeContact() {
+            this.contactOpen = false;
+        },
+
+        get filteredCategories() {
             const q = this.searchQuery.trim().toLowerCase();
-            if (!q) return this.products;
-            return this.products.filter(p =>
-                p.nama.toLowerCase().includes(q) ||
-                p.kategori.toLowerCase().includes(q)
-            );
+            if (!q) return this.categories;
+            return this.categories.filter(category => category.nama.toLowerCase().includes(q));
         },
 
-        // AI Chat methods
-        openChat() {
-            this.chatOpen = true;
-            this.chatHint = false;
-            this.$nextTick(() => {
-                const el = document.getElementById('chat-messages');
-                if (el) el.scrollTop = el.scrollHeight;
-                document.getElementById('chat-input')?.focus();
-            });
-        },
-
-        askSuggestion(text) {
-            this.chatMessage = text;
-            this.sendChat();
-        },
-
-        async sendChat() {
-            const message = this.chatMessage.trim();
-            if (!message || this.chatLoading) return;
-
-            this.chatMessages.push({ role: 'user', text: message });
-            this.chatMessage = '';
-            this.chatLoading = true;
-
-            this.$nextTick(() => {
-                const el = document.getElementById('chat-messages');
-                if (el) el.scrollTop = el.scrollHeight;
-            });
-
-            try {
-                const response = await fetch('<?php echo e(route('chatbot.message')); ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
-                    },
-                    body: JSON.stringify({ message })
-                });
-
-                const data = await response.json();
-                this.chatMessages.push({
-                    role: 'bot',
-                    text: data.reply || 'Maaf, saya belum bisa menjawab pertanyaan tersebut.'
-                });
-            } catch (error) {
-                this.chatMessages.push({
-                    role: 'bot',
-                    text: 'Maaf, sedang ada gangguan. Silakan coba lagi beberapa saat.'
-                });
-            } finally {
-                this.chatLoading = false;
-                this.$nextTick(() => {
-                    const el = document.getElementById('chat-messages');
-                    if (el) el.scrollTop = el.scrollHeight;
-                });
-            }
-        }
     }"
     @scroll.window.passive="onScroll()"
-    @keydown.escape.window="if (searchOpen) closeSearch(); if (chatOpen) chatOpen = false"
+    @keydown.escape.window="if (contactOpen) closeContact(); else if (searchOpen) closeSearch()"
     x-init="
         const sections = document.querySelectorAll('section[id]');
         if (sections.length) {
@@ -351,57 +345,59 @@
 
     <!-- NAVBAR -->
     <nav
-        class="fixed top-0 left-0 right-0 z-50 transition-all duration-400"
+        class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         :class="scrolled ? 'navbar-scrolled border-b' : 'navbar-top'"
     >
         <div class="max-w-6xl mx-auto px-5 sm:px-6">
             <div class="h-16 flex items-center justify-between">
 
-                <a href="#beranda" @click="setActive('beranda')" class="flex items-center gap-1 group">
+                <a href="#beranda" @click="setActive('beranda')" class="flex shrink-0 items-center group" aria-label="Konvexa Apparel — beranda">
                     <span
-                        class="text-xl font-semibold tracking-tight transition-colors duration-300 text-white"
-                        :class="scrolled ? 'text-neutral-900' : 'text-white'"
+                        class="text-lg font-semibold tracking-tight text-black transition-colors duration-300 sm:text-xl"
                     >Konvexa</span>
                     <span
-                        class="text-xl font-light tracking-tight transition-colors duration-300 text-white/50"
-                        :class="scrolled ? 'text-neutral-400' : 'text-white/50'"
-                    >Official</span>
+                        class="ml-2 border-l border-black pl-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-black transition-colors duration-300 sm:text-[10px]"
+                    >Apparel</span>
                 </a>
 
-                <div class="hidden md:flex items-center gap-1">
+                <div class="hidden md:flex items-center gap-0.5">
                     <a href="#beranda" @click="setActive('beranda')"
                        class="nav-link px-3.5 py-2 text-[13px] font-medium transition-colors duration-300"
-                       :class="scrolled ? (active === 'beranda' ? 'active text-neutral-900' : 'text-neutral-500 hover:text-neutral-900') : (active === 'beranda' ? 'active text-white' : 'text-white/70 hover:text-white')">Beranda</a>
+                       :class="active === 'beranda' ? 'active text-black' : 'text-black hover:text-black'">Beranda</a>
                     <a href="#tentang" @click="setActive('tentang')"
                        class="nav-link px-3.5 py-2 text-[13px] font-medium transition-colors duration-300"
-                       :class="scrolled ? (active === 'tentang' ? 'active text-neutral-900' : 'text-neutral-500 hover:text-neutral-900') : (active === 'tentang' ? 'active text-white' : 'text-white/70 hover:text-white')">Tentang Kami</a>
+                       :class="active === 'tentang' ? 'active text-black' : 'text-black hover:text-black'">Tentang Kami</a>
                     <a href="#kategori" @click="setActive('kategori')"
                        class="nav-link px-3.5 py-2 text-[13px] font-medium transition-colors duration-300"
-                       :class="scrolled ? (active === 'kategori' ? 'active text-neutral-900' : 'text-neutral-500 hover:text-neutral-900') : (active === 'kategori' ? 'active text-white' : 'text-white/70 hover:text-white')">Katalog</a>
-                    <a href="#produk" @click="setActive('produk')"
+                       :class="active === 'kategori' ? 'active text-black' : 'text-black hover:text-black'">Katalog</a>
+                    <a href="#lokasi" @click="setActive('lokasi')"
                        class="nav-link px-3.5 py-2 text-[13px] font-medium transition-colors duration-300"
-                       :class="scrolled ? (active === 'produk' ? 'active text-neutral-900' : 'text-neutral-500 hover:text-neutral-900') : (active === 'produk' ? 'active text-white' : 'text-white/70 hover:text-white')">Produk</a>
+                       :class="active === 'lokasi' ? 'active text-black' : 'text-black hover:text-black'">Lokasi</a>
                     <a href="#kontak" @click="setActive('kontak')"
                        class="nav-link px-3.5 py-2 text-[13px] font-medium transition-colors duration-300"
-                       :class="scrolled ? (active === 'kontak' ? 'active text-neutral-900' : 'text-neutral-500 hover:text-neutral-900') : (active === 'kontak' ? 'active text-white' : 'text-white/70 hover:text-white')">Kontak</a>
+                       :class="active === 'kontak' ? 'active text-black' : 'text-black hover:text-black'">Kontak</a>
                 </div>
 
                 <div class="flex items-center gap-1">
                     <button
+                        type="button"
+                        @click="openContact()"
+                        class="hidden md:inline-flex items-center rounded-full bg-black px-4 py-2 text-xs font-semibold text-white transition-colors duration-300 hover:bg-neutral-900"
+                    >Minta Penawaran</button>
+                    <button
                         @click="openSearch()"
-                        class="w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-300"
-                        :class="scrolled ? 'text-neutral-600 hover:bg-neutral-100' : 'text-white/80 hover:bg-white/10'"
-                        aria-label="Cari produk"
+                        class="ml-1 inline-flex h-10 items-center gap-2 rounded-full border border-black px-3 text-black transition-colors duration-300 hover:bg-black hover:text-white"
+                        aria-label="Cari Kategori"
                     >
-                        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-[17px] w-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                         </svg>
+                        <span class="hidden text-xs font-medium sm:inline">Cari Kategori</span>
                     </button>
 
                     <button
                         @click="mobileMenu = !mobileMenu"
-                        class="md:hidden w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-300"
-                        :class="scrolled ? 'text-neutral-700 hover:bg-neutral-100' : 'text-white hover:bg-white/10'"
+                        class="md:hidden flex h-9 w-9 items-center justify-center rounded-full text-black transition-colors duration-300 hover:bg-black hover:text-white"
                         aria-label="Menu"
                     >
                         <svg x-show="!mobileMenu" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -424,14 +420,14 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 -translate-y-2"
-            class="md:hidden px-5 py-3 bg-white/95 backdrop-blur-xl border-t border-neutral-100"
+            class="md:hidden border-t border-slate-100 bg-white/95 px-5 py-3 backdrop-blur-xl transition-colors duration-300"
         >
             <div class="space-y-0.5">
-                <a href="#beranda" @click="setActive('beranda')" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Beranda</a>
-                <a href="#tentang" @click="setActive('tentang')" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Tentang Kami</a>
-                <a href="#kategori" @click="setActive('kategori')" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Katalog</a>
-                <a href="#produk" @click="setActive('produk')" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Produk</a>
-                <a href="#kontak" @click="setActive('kontak')" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition">Kontak</a>
+                <a href="#beranda" @click="setActive('beranda')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Beranda</a>
+                <a href="#tentang" @click="setActive('tentang')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Tentang Kami</a>
+                <a href="#kategori" @click="setActive('kategori')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Katalog</a>
+                <a href="#lokasi" @click="setActive('lokasi')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Lokasi</a>
+                <a href="#kontak" @click="setActive('kontak')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Kontak</a>
             </div>
         </div>
     </nav>
@@ -440,56 +436,79 @@
     <div
         x-show="searchOpen"
         x-cloak
-        class="fixed inset-0 z-[90]"
+        class="fixed inset-0 z-[90] flex items-start justify-center overflow-y-auto px-4 py-16 sm:py-24"
     >
         <div
             x-show="searchOpen"
             x-transition.opacity.duration.200ms
             @click="closeSearch()"
-            class="absolute inset-0 bg-neutral-950/40 backdrop-blur-sm"
+            class="absolute inset-0 bg-slate-950/35 backdrop-blur-sm"
         ></div>
 
         <div
             x-show="searchOpen"
             x-transition:enter="transition ease-out duration-250"
-            x-transition:enter-start="opacity-0 -translate-y-3"
+            x-transition:enter-start="opacity-0 -translate-y-2 scale-[0.99]"
             x-transition:enter-end="opacity-100 translate-y-0"
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0"
-            x-transition:leave-end="opacity-0 -translate-y-3"
-            class="relative max-w-xl mx-auto mt-16 sm:mt-24 px-4"
+            x-transition:leave-end="opacity-0 -translate-y-2"
+            class="relative z-10 w-full max-w-xl"
         >
-            <div class="search-panel bg-white rounded-2xl overflow-hidden">
-                <div class="flex items-center gap-3 px-5 py-4 border-b border-neutral-100">
-                    <svg class="w-5 h-5 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
-                    </svg>
-                    <input
-                        id="search-input"
-                        type="search"
-                        x-model="searchQuery"
-                        placeholder="Cari produk atau kategori..."
-                        class="flex-1 bg-transparent text-[15px] text-neutral-900 placeholder-neutral-400 outline-none"
-                        autocomplete="off"
-                    >
-                    <button
-                        @click="closeSearch()"
-                        class="text-xs font-medium text-neutral-400 hover:text-neutral-700 transition px-2 py-1 rounded-md hover:bg-neutral-50"
-                    >
-                        Esc
-                    </button>
+            <div
+                class="search-panel overflow-hidden rounded-[26px] border border-white bg-white"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="search-dialog-title"
+            >
+                <div class="bg-gradient-to-br from-slate-50 via-white to-blue-50/70 px-6 pb-5 pt-6 sm:px-7">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">Jelajahi katalog</p>
+                            <h2 id="search-dialog-title" class="mt-2 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">Cari kategori</h2>
+                            <p class="mt-1 text-sm text-slate-500">Temukan produk yang sesuai kebutuhanmu.</p>
+                        </div>
+                        <button
+                            type="button"
+                            @click="closeSearch()"
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-500 transition hover:border-slate-300 hover:bg-white hover:text-slate-900"
+                            aria-label="Tutup pencarian"
+                        >
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 6 12 12M18 6 6 18"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="max-h-[min(420px,60vh)] overflow-y-auto">
+                <div class="px-6 pb-5 sm:px-7">
+                    <div class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3.5 transition focus-within:border-slate-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-slate-100">
+                        <svg class="h-5 w-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                        </svg>
+                        <input
+                            id="search-input"
+                            type="search"
+                            x-model="searchQuery"
+                            placeholder="Contoh: kaos, polo, kemeja..."
+                            class="min-w-0 flex-1 bg-transparent text-sm text-slate-900 placeholder-slate-400 outline-none"
+                            autocomplete="off"
+                            aria-label="Cari kategori produk"
+                        >
+                        <span class="hidden rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-400 sm:inline">ESC</span>
+                    </div>
+                </div>
+
+                <div class="max-h-[min(360px,45vh)] overflow-y-auto border-t border-slate-100">
                     <template x-if="searchQuery.trim() === ''">
-                        <div class="px-5 py-8 text-center">
-                            <p class="text-sm text-neutral-400 font-light">Ketik nama produk atau kategori</p>
-                            <div class="mt-5 flex flex-wrap justify-center gap-2">
+                        <div class="px-6 py-5 sm:px-7">
+                            <p class="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">Kategori populer</p>
+                            <div class="flex flex-wrap gap-2">
                                 <template x-for="tag in <?php echo \Illuminate\Support\Js::from($categories->pluck('name'))->toHtml() ?>">
                                     <button
                                         type="button"
                                         @click="searchQuery = tag"
-                                        class="px-3 py-1.5 rounded-full bg-neutral-50 border border-neutral-100 text-xs font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition"
+                                        class="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-slate-900"
                                         x-text="tag"
                                     ></button>
                                 </template>
@@ -497,35 +516,40 @@
                         </div>
                     </template>
 
-                    <template x-if="searchQuery.trim() !== '' && filteredProducts.length === 0">
-                        <div class="px-5 py-10 text-center">
-                            <p class="text-sm font-medium text-neutral-800">Tidak ada hasil</p>
-                            <p class="mt-1 text-xs text-neutral-400 font-light">Coba kata kunci lain</p>
+                    <template x-if="searchQuery.trim() !== '' && filteredCategories.length === 0">
+                        <div class="px-6 py-9 text-center sm:px-7">
+                            <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="11" cy="11" r="7" stroke-width="1.6"/>
+                                    <path stroke-linecap="round" stroke-width="1.6" d="m16 16 4 4"/>
+                                </svg>
+                            </div>
+                            <p class="mt-3 text-sm font-semibold text-slate-800">Kategori belum ditemukan</p>
+                            <p class="mt-1 text-xs text-slate-500">Coba kata kunci lain, misalnya “polo” atau “kaos”.</p>
                         </div>
                     </template>
 
-                    <template x-if="searchQuery.trim() !== '' && filteredProducts.length > 0">
+                    <template x-if="searchQuery.trim() !== '' && filteredCategories.length > 0">
                         <div class="py-2">
-                            <p class="px-5 py-2 text-[10px] uppercase tracking-wider text-neutral-400 font-medium" x-text="filteredProducts.length + ' produk ditemukan'"></p>
-                            <template x-for="p in filteredProducts" :key="p.id">
+                            <p class="px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400 sm:px-7" x-text="filteredCategories.length + ' kategori ditemukan'"></p>
+                            <template x-for="category in filteredCategories" :key="category.id">
                                 <a
-                                    href="#produk"
-                                    @click="closeSearch(); setActive('produk')"
-                                    class="flex items-center gap-4 px-5 py-3 hover:bg-neutral-50 transition group"
+                                    :href="'#kategori-' + category.slug"
+                                    @click="closeSearch()"
+                                    class="group flex items-center gap-4 px-6 py-3 transition hover:bg-slate-50 sm:px-7"
                                 >
                                     <img
-                                        :src="p.gambar"
-                                        :alt="p.nama"
-                                        class="w-12 h-12 rounded-lg object-cover bg-neutral-100 shrink-0"
+                                        :src="category.gambar"
+                                        :alt="category.nama"
+                                        class="h-12 w-12 shrink-0 rounded-xl border border-slate-100 bg-slate-50 object-cover"
                                     >
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-neutral-900 truncate group-hover:text-neutral-700" x-text="p.nama"></p>
-                                        <p class="text-[11px] text-neutral-400 mt-0.5" x-text="p.kategori"></p>
+                                        <p class="truncate text-sm font-semibold text-slate-800" x-text="category.nama"></p>
+                                        <p class="mt-1 text-xs text-slate-400">Lihat detail kategori</p>
                                     </div>
-                                    <div class="text-right shrink-0">
-                                        <p class="text-sm font-semibold text-neutral-900" x-text="formatPrice(p.harga)"></p>
-                                        <p x-show="p.hargaCoret > 0" class="text-[10px] text-neutral-400 line-through" x-text="formatPrice(p.hargaCoret)"></p>
-                                    </div>
+                                    <svg class="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 12h14m-6-6 6 6-6 6"/>
+                                    </svg>
                                 </a>
                             </template>
                         </div>
@@ -535,72 +559,213 @@
         </div>
     </div>
 
-    <!-- HERO -->
-    <section id="beranda" class="relative min-h-[100svh] flex items-center overflow-hidden">
-        <img
-            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=80"
-            alt="Konvexa Collection"
-            class="hero-image absolute inset-0 w-full h-full object-cover"
+    <div
+        x-cloak
+        x-show="contactOpen"
+        x-transition.opacity
+        @click.self="closeContact()"
+        class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 px-5 py-8"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contact-modal-title"
+    >
+        <div
+            x-show="contactOpen"
+            x-transition
+            class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
         >
-        <div class="absolute inset-0 hero-overlay"></div>
-
-        <div class="relative z-10 max-w-6xl mx-auto w-full px-5 sm:px-6 pt-16">
-            <div class="max-w-2xl fade-up">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm mb-8">
-                    <span class="w-1 h-1 bg-white rounded-full"></span>
-                    <span class="text-[10px] uppercase tracking-[0.2em] font-medium text-white/80">Konveksi 2026</span>
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400">Konsultasi</p>
+                    <h2 id="contact-modal-title" class="mt-2 text-2xl font-semibold tracking-tight text-neutral-900">Hubungi Kami</h2>
+                    <p class="mt-2 text-sm leading-6 text-neutral-500">Pilih cara yang paling nyaman untuk menghubungi admin.</p>
                 </div>
+                <button
+                    type="button"
+                    @click="closeContact()"
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-900"
+                    aria-label="Tutup pop-up"
+                >&times;</button>
+            </div>
 
-                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-semibold text-white leading-[1.05] tracking-tight">
-                    Konveksi Berkualitas.
-                    <span class="block font-light text-white/50 mt-1">Harga Bersahabat.</span>
-                </h1>
+            <div class="mt-6 grid gap-3">
+                <a
+                    href="https://wa.me/<?php echo e($whatsappNumber); ?>"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center justify-between rounded-2xl border border-neutral-200 p-4 transition hover:border-neutral-400 hover:bg-neutral-50"
+                >
+                    <span>
+                        <span class="block text-sm font-semibold text-neutral-900">WhatsApp</span>
+                        <span class="mt-1 block text-xs text-neutral-500"><?php echo e($siteSettings['whatsapp_phone']); ?></span>
+                    </span>
+                    <span class="text-sm font-medium text-neutral-500">Hubungi <span aria-hidden="true">&rarr;</span></span>
+                </a>
+                <?php if($siteSettings['instagram_url']): ?>
+                <a
+                    href="<?php echo e($siteSettings['instagram_url']); ?>"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center justify-between rounded-2xl border border-neutral-200 p-4 transition hover:border-neutral-400 hover:bg-neutral-50"
+                >
+                    <span>
+                        <span class="block text-sm font-semibold text-neutral-900">Instagram</span>
+                        <span class="mt-1 block text-xs text-neutral-500"><?php echo e($siteSettings['instagram_handle'] ?: $siteSettings['instagram_url']); ?></span>
+                    </span>
+                    <span class="text-sm font-medium text-neutral-500">Kunjungi <span aria-hidden="true">&rarr;</span></span>
+                </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 
-                <p class="mt-7 max-w-md text-[15px] text-white/60 leading-relaxed font-light">
-                    Produksi kaos, kemeja, seragam, dan apparel custom dengan kualitas terjamin dan proses yang transparan.
+    <!-- HERO -->
+    <section id="beranda" class="hero-section relative overflow-hidden">
+        <svg class="hero-background-art" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+            <defs>
+                <linearGradient id="wave-royal" x1="0" y1="0" x2="1" y2=".6">
+                    <stop offset="0" stop-color="#617ad0" stop-opacity=".01"/>
+                    <stop offset=".55" stop-color="#5977cf" stop-opacity=".15"/>
+                    <stop offset="1" stop-color="#354c9a" stop-opacity=".08"/>
+                </linearGradient>
+                <linearGradient id="wave-cyan" x1="0" y1="0" x2="1" y2=".3">
+                    <stop offset="0" stop-color="#78d8ef" stop-opacity=".01"/>
+                    <stop offset=".55" stop-color="#62c6df" stop-opacity=".18"/>
+                    <stop offset="1" stop-color="#6097d2" stop-opacity=".07"/>
+                </linearGradient>
+                <linearGradient id="wave-violet" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#9d8bea" stop-opacity="0"/>
+                    <stop offset=".55" stop-color="#9384d0" stop-opacity=".11"/>
+                    <stop offset="1" stop-color="#7771ba" stop-opacity=".05"/>
+                </linearGradient>
+                <radialGradient id="wave-glow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0" stop-color="#66cbeb" stop-opacity=".2"/>
+                    <stop offset="1" stop-color="#66cbeb" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="wave-fade" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="white" stop-opacity="0"/>
+                    <stop offset=".38" stop-color="white" stop-opacity="0"/>
+                    <stop offset=".58" stop-color="white" stop-opacity=".16"/>
+                    <stop offset=".82" stop-color="white" stop-opacity=".48"/>
+                    <stop offset="1" stop-color="white" stop-opacity=".2"/>
+                </linearGradient>
+                <mask id="wave-fade-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+                    <rect width="1920" height="1080" fill="url(#wave-fade)"/>
+                </mask>
+                <filter id="wave-soft-light" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="56"/>
+                </filter>
+                <filter id="wave-soft-edges" x="-5%" y="-20%" width="110%" height="140%">
+                    <feGaussianBlur stdDeviation="16"/>
+                </filter>
+            </defs>
+            <path d="M0 177C111 77 219 0 365 0h430C497 80 210 169 0 322Z" fill="#dce3ed" opacity=".2"/>
+            <path d="M1508 106h232l-335 562h-232Z" fill="#a9c8e8" opacity=".23"/>
+            <path d="m1920 205-280 288 116 122 164-164Z" fill="#dfe5ef" opacity=".15"/>
+            <ellipse cx="1435" cy="610" rx="470" ry="260" fill="url(#wave-glow)" filter="url(#wave-soft-light)"/>
+            <g mask="url(#wave-fade-mask)" filter="url(#wave-soft-edges)" opacity=".78">
+                <path d="M0 660c215 2 374 83 603 171 237 91 405 97 651 20 244-76 454-197 666-200v429H0Z" fill="url(#wave-royal)"/>
+                <path d="M0 946c226-116 425-127 664-67 227 57 404 94 632 28 240-70 411-169 624-196v369H0Z" fill="url(#wave-cyan)"/>
+                <path d="M0 1056c260-119 443-142 703-93 267 51 438 70 686-20 211-77 378-150 531-165v302H0Z" fill="url(#wave-violet)"/>
+            </g>
+        </svg>
+        <div class="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-5 pb-8 pt-24 sm:px-8 sm:pb-10 sm:pt-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:px-10 lg:pb-10 lg:pt-28">
+            <div class="fade-up max-w-xl">
+                <p class="mb-5 inline-flex items-center gap-2.5 rounded-full border border-slate-200/80 bg-white/85 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600 shadow-sm sm:text-[11px]">
+                    <svg class="h-4 w-4 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="m8 4 4 2 4-2 5 3-3 4-2-1v10H8V10l-2 1-3-4 5-3Z"/>
+                    </svg>
+                    <?php echo e($siteSettings['hero_badge']); ?>
+
                 </p>
 
-                <div class="mt-10 flex flex-wrap gap-3">
-                    <a
-                        href="produk"
-                        @click="setActive('produk')"
-                        class="inline-flex items-center gap-2.5 bg-white text-neutral-900 px-6 py-3.5 rounded-full text-sm font-medium hover:bg-neutral-100 transition-all duration-300"
-                    >
-                        Lihat Produk
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 12h14m-6-6 6 6-6 6"/>
-                        </svg>
-                    </a>
+                <h1 class="hero-title max-w-[620px]">
+                    <?php echo e($siteSettings['hero_title']); ?>
+
+                    <span><?php echo e($siteSettings['hero_highlight']); ?></span>
+                </h1>
+
+                <p class="mt-4 max-w-[500px] text-[15px] leading-7 text-slate-600">
+                    <?php echo e($siteSettings['hero_description']); ?>
+
+                </p>
+
+                <div class="mt-6 flex flex-wrap items-center gap-3">
                     <a
                         href="#kategori"
                         @click="setActive('kategori')"
-                        class="inline-flex items-center px-6 py-3.5 rounded-full border border-white/20 text-white text-sm font-medium hover:bg-white/5 transition-all duration-300"
+                        class="group inline-flex items-center gap-4 rounded-full bg-black py-2 pl-6 pr-2 text-sm font-semibold text-white transition duration-300 hover:bg-neutral-900"
                     >
-                        Eksplorasi
+                        Lihat Koleksi
+                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition duration-300 group-hover:translate-x-0.5">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 12h14m-6-6 6 6-6 6"/>
+                            </svg>
+                        </span>
                     </a>
+                    <button
+                        type="button"
+                        @click="openContact()"
+                        class="inline-flex items-center gap-2 rounded-full border border-black px-5 py-3.5 text-sm font-medium text-black transition hover:bg-black hover:text-white"
+                    >
+                        Konsultasi Pesanan
+                    </button>
                 </div>
 
-                <div class="mt-14 flex flex-wrap gap-x-8 gap-y-2 text-[12px] text-white/40 font-light">
-                    <div class="flex items-center gap-2">
-                        <span class="text-white/70">✓</span> Bahan Premium
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-white/70">✓</span> Produksi Cepat
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-white/70">✓</span> Harga Kompetitif
-                    </div>
+            </div>
+
+            <div class="hero-image-enter mx-auto w-full max-w-[500px] lg:ml-auto" aria-label="Koleksi apparel Konvexa">
+                <div class="hero-product-frame">
+                    <img
+                        src="<?php echo e(asset('image/hero-apparel-feature.png')); ?>"
+                        alt="Polo hitam dan jersey putih custom Konvexa"
+                        class="hero-product-image"
+                        fetchpriority="high"
+                    >
                 </div>
             </div>
         </div>
 
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
-            <a href="#tentang" class="flex flex-col items-center gap-1.5 text-white/30 hover:text-white/60 transition">
-                <span class="text-[9px] uppercase tracking-[0.25em]">Scroll</span>
-                <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0-7-7m7 7V3"/>
-                </svg>
-            </a>
+        <div class="hero-benefits relative z-10" role="region" aria-label="Keunggulan Konvexa Apparel">
+            <div class="mx-auto grid max-w-6xl grid-cols-2 px-5 sm:px-8 lg:grid-cols-4 lg:px-10">
+                <div class="flex items-center gap-3 border-b border-slate-200 py-2 pr-3 lg:border-b-0 lg:border-r lg:pr-5">
+                    <svg class="h-8 w-8 shrink-0 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m8 4 4 2 4-2 5 3-3 4-2-1v10H8V10l-2 1-3-4 5-3Z"/>
+                    </svg>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-900 sm:text-sm">Hasil Sesuai Desain</p>
+                        <p class="mt-1 text-[10px] text-slate-500 sm:text-xs">Desain sesuai kebutuhan</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 border-b border-slate-200 py-2 pl-3 lg:border-b-0 lg:border-r lg:px-5">
+                    <svg class="h-8 w-8 shrink-0 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m12 3 7 3v5c0 4.5-2.8 7.7-7 10-4.2-2.3-7-5.5-7-10V6l7-3Z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-900 sm:text-sm">Kualitas Konsisten</p>
+                        <p class="mt-1 text-[10px] text-slate-500 sm:text-xs">Hasil rapi dan nyaman dipakai</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 py-2 pr-3 lg:border-r lg:border-slate-200 lg:px-5">
+                    <svg class="h-8 w-8 shrink-0 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7h11v10H3zM14 10h4l3 3v4h-7zM7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm11 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                    </svg>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-900 sm:text-sm">Produksi Terkendali</p>
+                        <p class="mt-1 text-[10px] text-slate-500 sm:text-xs">Order kecil hingga skala besar</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 py-2 pl-3 lg:pl-5">
+                    <svg class="h-8 w-8 shrink-0 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12a9 9 0 0 1 18 0v5h-4v-6h4M3 12v5h4v-6H3m14 5a5 5 0 0 1-5 5h-1"/>
+                    </svg>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-900 sm:text-sm">Konsultasi Pesanan</p>
+                        <p class="mt-1 text-[10px] text-slate-500 sm:text-xs">Dari pemilihan bahan hingga produksi</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -615,109 +780,127 @@
             </div>
             <div class="reveal reveal-delay-1 mt-8 space-y-5">
                 <p class="text-[15px] text-neutral-500 font-light leading-relaxed">
-                    Didirikan pada 2025, Konvexa hadir sebagai konveksi yang fokus pada produksi kemeja, kaos, polo, dan rompi. Kami melayani berbagai kebutuhan custom, dari order kecil hingga skala besar, dengan standar kualitas yang konsisten.
+                    <?php echo e($siteSettings['about_intro']); ?>
+
                 </p>
                 <p class="text-[15px] text-neutral-500 font-light leading-relaxed">
-                    Konvexa berdiri di bawah satu naungan produksi dengan Ar Rasi Konveksi, sehingga kami dapat memberikan proses yang lebih terukur, hasil yang rapi, dan harga yang tetap kompetitif.
-                </p>
-                <p class="text-[15px] text-neutral-500 font-light leading-relaxed">
-                    Kami berkomitmen menghadirkan produk apparel yang nyaman dipakai, tahan lama, dan sesuai dengan karakter setiap brand.
+                    <?php echo e($siteSettings['about_commitment']); ?>
+
                 </p>
             </div>
         </div>
     </section>
 
     <!-- KATALOG -->
-    <section id="kategori" class="py-20 sm:py-24 px-5 sm:px-6 bg-neutral-50">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+    <section id="kategori" class="relative bg-white py-20 sm:py-24 px-5 sm:px-6">
+        <div class="relative mx-auto max-w-6xl">
+            <div class="mb-10 flex flex-col gap-5 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
                 <div class="reveal">
-                    <p class="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400 mb-2">Curated Collections</p>
-                    <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">Katalog Pilihan</h2>
+                    <p class="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        <span class="h-px w-7 bg-slate-900"></span>
+                        Koleksi Konvexa
+                    </p>
+                    <h2 class="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Katalog Pilihan</h2>
                 </div>
-                <p class="reveal reveal-delay-1 max-w-xs text-sm text-neutral-500 font-light leading-relaxed">
-                    Eksplorasi seluruh koleksi produk yang dirancang khusus sesuai gaya hidup Anda.
+                <p class="reveal reveal-delay-1 max-w-sm text-sm leading-6 text-slate-600">
+                    Pilih kategori seragam dan apparel custom untuk kebutuhan tim, komunitas, maupun brand Anda.
                 </p>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <a href="<?php echo e(route('produk.index', ['category' => $category->slug])); ?>"
-                       class="reveal reveal-delay-<?php echo e(min($loop->iteration, 6)); ?> group relative overflow-hidden rounded-2xl aspect-[3/4] bg-white border border-neutral-100 hover:shadow-xl transition-all duration-500">
-
-                        <img src="<?php echo e($category->image_url); ?>"
-                             alt="<?php echo e($category->name); ?>"
-                             class="absolute inset-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-all duration-700">
-
-                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent opacity-90"></div>
-
-                        <div class="absolute inset-0 p-5 flex flex-col justify-between">
-                            <div class="flex justify-end">
-                                <span class="w-7 h-7 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-all duration-300">→</span>
-                            </div>
-                            <h3 class="font-medium text-base text-white tracking-tight"><?php echo e($category->name); ?></h3>
+            <div class="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+                <?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <article id="kategori-<?php echo e($category->slug); ?>"
+                       class="reveal reveal-delay-<?php echo e(min($loop->iteration, 6)); ?> scroll-mt-24 group overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
+                        <div class="relative aspect-[4/3] overflow-hidden bg-white">
+                            <img src="<?php echo e($category->image_url); ?>"
+                                 alt="<?php echo e($category->name); ?>"
+                                 class="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.04] sm:p-5">
                         </div>
-                    </a>
+                        <div class="flex flex-col items-stretch gap-3 p-4 sm:p-5">
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                                    Kategori <?php echo e(sprintf('%02d', $loop->iteration)); ?>
+
+                                </span>
+                                <h3 class="mt-1 break-words text-sm font-semibold tracking-tight text-slate-900 sm:text-base">
+                                    <?php echo e($category->name); ?>
+
+                                </h3>
+                            </div>
+                            <button type="button" @click="openContact()"
+                               class="w-full rounded-full bg-slate-900 px-3 py-2.5 text-center text-[10px] font-medium text-white transition hover:bg-slate-700 sm:text-xs">
+                                Hubungi Admin
+                            </button>
+                        </div>
+                    </article>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <p class="col-span-full text-center text-sm text-neutral-400">Belum ada kategori.</p>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <p class="col-span-full rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-14 text-center text-sm text-slate-500">
+                        Kategori akan segera hadir.
+                    </p>
+                <?php endif; ?>
             </div>
         </div>
     </section>
 
-    <!-- PRODUCTS -->
-    <section id="produk" class="py-20 sm:py-24 px-5 sm:px-6 bg-white">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
-                <div class="reveal">
-                    <p class="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400 mb-2">Best Seller</p>
-                    <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">Produk Terlaris</h2>
-                </div>
-                <a
-                    href="<?php echo e(route('produk.index')); ?>"
-                    class="reveal reveal-delay-1 inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-all group"
-                >
-                    Lihat semua
-                    <span class="group-hover:translate-x-0.5 transition-transform">→</span>
-                </a>
+    <!-- LOKASI -->
+    <?php
+        $locationAddress = $siteSettings['location_address'];
+        $locationName = $siteSettings['location_name'];
+        $googleMapsQuery = urlencode($locationName . ', ' . $locationAddress);
+        $appleMapsQuery = urlencode($locationName . ', ' . $locationAddress);
+    ?>
+    <section id="lokasi" class="relative overflow-hidden bg-[#f7f9f9] py-16 sm:py-20 px-5 sm:px-6">
+        <div class="pointer-events-none absolute -right-36 top-0 h-96 w-96 rounded-full bg-[#eaf3f3] blur-3xl" aria-hidden="true"></div>
+        <div class="relative mx-auto max-w-6xl">
+            <div class="reveal mb-8 max-w-2xl sm:mb-10">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Lokasi Konvexa</p>
+                <h2 class="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Temukan Kami</h2>
+                <p class="mt-3 text-sm leading-6 text-slate-600">Lihat lokasi dan petunjuk arah ke <?php echo e($locationName); ?>.</p>
             </div>
+            <div class="grid items-center gap-8 md:grid-cols-2 md:gap-12">
+                <div class="reveal overflow-hidden rounded-3xl border border-neutral-100 bg-neutral-100 shadow-[0_16px_44px_rgba(0,0,0,0.06)]">
+                    <iframe
+                        src="https://maps.google.com/maps?q=<?php echo e($googleMapsQuery); ?>&amp;output=embed"
+                        title="Peta lokasi produksi <?php echo e($locationName); ?>"
+                        class="aspect-[4/3] w-full"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allowfullscreen
+                    ></iframe>
+                </div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <a href="<?php echo e(route('produk.show', $product)); ?>"
-                       class="reveal-scale reveal-delay-<?php echo e(min($loop->iteration, 6)); ?> product-card group bg-white rounded-2xl overflow-hidden border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition-all duration-500">
+                <div class="reveal reveal-delay-1 md:pl-4">
+                    <p class="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400">Alamat lokasi</p>
+                    <h3 class="mt-3 text-3xl font-medium tracking-tight text-neutral-950 sm:text-4xl"><?php echo e($locationName); ?></h3>
+                    <p class="mt-5 max-w-lg text-sm leading-7 text-neutral-500 sm:text-base">
+                        <?php echo e($locationAddress); ?>
 
-<div class="relative aspect-[3/4] overflow-hidden bg-white">
-    <img
-        src="<?php echo e($product->image_url); ?>"
-        alt="<?php echo e($product->name); ?>"
-        class="product-image w-full h-full object-contain p-4"
-        loading="lazy"
-        decoding="async"
-        width="600"
-        height="750"
-    >
-</div>
-
-                        <div class="p-4">
-                            <p class="text-[10px] uppercase tracking-wider text-neutral-400 mb-1"><?php echo e($product->category?->name); ?></p>
-                            <h3 class="font-medium text-sm leading-snug text-neutral-800 line-clamp-2 min-h-[40px]"><?php echo e($product->name); ?></h3>
-                            <div class="mt-4">
-                                <p class="text-base font-semibold tracking-tight text-neutral-900">
-                                    Rp<?php echo e(number_format($product->price, 0, ',', '.')); ?>
-
-                                </p>
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($product->original_price && $product->original_price > $product->price): ?>
-                                    <p class="mt-0.5 text-xs text-neutral-400 line-through">
-                                        Rp<?php echo e(number_format($product->original_price, 0, ',', '.')); ?>
-
-                                    </p>
-                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                            </div>
-                        </div>
-                    </a>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <p class="col-span-full text-center text-sm text-neutral-400">Belum ada produk.</p>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </p>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <a
+                            href="https://www.google.com/maps/search/?api=1&amp;query=<?php echo e($googleMapsQuery); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-3 rounded-full bg-neutral-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-neutral-800"
+                        >
+                            Google Maps
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 17 17 7M7 7h10v10"/>
+                            </svg>
+                        </a>
+                        <a
+                            href="https://maps.apple.com/?q=<?php echo e($appleMapsQuery); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-3 rounded-full border border-neutral-200 bg-white/80 px-5 py-3 text-sm font-medium text-neutral-800 transition hover:border-neutral-400 hover:bg-white"
+                        >
+                            Apple Maps
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 17 17 7M7 7h10v10"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -734,8 +917,9 @@
             </div>
 
             <div class="reveal reveal-delay-1 mt-12 grid sm:grid-cols-2 gap-3">
+                <?php if($siteSettings['instagram_url']): ?>
                 <a
-                    href="https://www.instagram.com/konvexaofficial?stkn=NDZ0NWdqdjlmdmVi&utm_source=qr"
+                    href="<?php echo e($siteSettings['instagram_url']); ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-300 text-left"
@@ -747,13 +931,15 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-neutral-900">Instagram</p>
-                        <p class="text-xs text-neutral-400 mt-0.5">@konvexaofficial</p>
+                        <p class="text-xs text-neutral-400 mt-0.5"><?php echo e($siteSettings['instagram_handle'] ?: $siteSettings['instagram_url']); ?></p>
                     </div>
                     <span class="text-neutral-300 group-hover:text-neutral-900 transition">→</span>
                 </a>
+                <?php endif; ?>
 
+                <?php if($siteSettings['tiktok_url']): ?>
                 <a
-                    href="https://tiktok.com/"
+                    href="<?php echo e($siteSettings['tiktok_url']); ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-300 text-left"
@@ -765,13 +951,14 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-neutral-900">TikTok</p>
-                        <p class="text-xs text-neutral-400 mt-0.5">@konvexa.official</p>
+                        <p class="text-xs text-neutral-400 mt-0.5"><?php echo e($siteSettings['tiktok_handle'] ?: $siteSettings['tiktok_url']); ?></p>
                     </div>
                     <span class="text-neutral-300 group-hover:text-neutral-900 transition">→</span>
                 </a>
+                <?php endif; ?>
 
                 <a
-                    href="https://wa.me/62895411146879"
+                    href="https://wa.me/<?php echo e($whatsappNumber); ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-300 text-left"
@@ -783,13 +970,13 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-neutral-900">WhatsApp</p>
-                        <p class="text-xs text-neutral-400 mt-0.5">+62 895-4111-46879</p>
+                        <p class="text-xs text-neutral-400 mt-0.5"><?php echo e($siteSettings['whatsapp_phone']); ?></p>
                     </div>
                     <span class="text-neutral-300 group-hover:text-neutral-900 transition">→</span>
                 </a>
 
                 <a
-                    href="mailto:konvexaofficial@gmail.com"
+                    href="mailto:<?php echo e($siteSettings['contact_email']); ?>"
                     class="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-300 text-left"
                 >
                     <div class="w-11 h-11 rounded-xl bg-neutral-50 flex items-center justify-center shrink-0 group-hover:bg-neutral-900 transition-colors duration-300">
@@ -799,132 +986,13 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-neutral-900">Email</p>
-                        <p class="text-xs text-neutral-400 mt-0.5">konvexaofficial@gmail.com</p>
+                        <p class="text-xs text-neutral-400 mt-0.5"><?php echo e($siteSettings['contact_email']); ?></p>
                     </div>
                     <span class="text-neutral-300 group-hover:text-neutral-900 transition">→</span>
                 </a>
             </div>
         </div>
     </section>
-
-    <!-- AI ASSISTANT -->
-    <div class="fixed bottom-5 right-5 z-[80]">
-
-        <!-- Teaser -->
-        <div
-            x-show="!chatOpen && chatHint"
-            x-cloak
-            x-transition
-            class="absolute bottom-[68px] right-0 w-[250px] rounded-2xl border border-neutral-200 bg-white px-4 py-3.5 shadow-lg"
-        >
-            <div class="flex items-start gap-3">
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white text-[11px] font-bold">AI</div>
-                <div class="min-w-0 flex-1">
-                    <p class="text-sm font-semibold text-neutral-900">Ada yang bisa dibantu?</p>
-                    <p class="mt-0.5 text-xs text-neutral-500">Tanya produk, harga, atau cara order.</p>
-                    <button @click="openChat()" class="mt-2 text-xs font-semibold text-neutral-900 hover:underline">Mulai chat →</button>
-                </div>
-                <button @click="chatHint = false" class="text-neutral-300 hover:text-neutral-600 text-lg leading-none" aria-label="Tutup">×</button>
-            </div>
-        </div>
-
-        <!-- Chat Window -->
-        <div
-            x-show="chatOpen"
-            x-cloak
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 translate-y-3 scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            class="chat-window mb-3 w-[calc(100vw-2rem)] sm:w-[370px] overflow-hidden rounded-2xl border border-neutral-200 bg-white"
-        >
-            <!-- Header -->
-            <div class="flex items-center justify-between px-4 py-3.5 bg-neutral-900 text-white">
-                <div class="flex items-center gap-2.5">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white text-neutral-900 text-[11px] font-bold">AI</div>
-                    <div>
-                        <p class="text-sm font-semibold">Konvexa AI</p>
-                        <p class="text-[11px] text-white/50">Asisten virtual · Online</p>
-                    </div>
-                </div>
-                <button @click="chatOpen = false" class="rounded-full p-1.5 text-white/50 hover:bg-white/10 hover:text-white transition" aria-label="Tutup">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg>
-                </button>
-            </div>
-
-            <!-- Quick suggestions -->
-            <div class="px-3 pt-3 pb-2 flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-b border-neutral-100">
-                <button @click="askSuggestion('Ada produk kaos?')" class="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium text-neutral-600 hover:bg-neutral-50 transition">Cari produk</button>
-                <button @click="askSuggestion('Berapa harga workshirt?')" class="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium text-neutral-600 hover:bg-neutral-50 transition">Cek harga</button>
-                <button @click="askSuggestion('Bagaimana cara order?')" class="shrink-0 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium text-neutral-600 hover:bg-neutral-50 transition">Cara order</button>
-            </div>
-
-            <!-- Messages -->
-            <div id="chat-messages" class="chat-scroll h-[270px] overflow-y-auto bg-neutral-50/60 px-3 py-3 space-y-2.5">
-                <template x-for="(msg, index) in chatMessages" :key="index">
-                    <div class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
-                        <div
-                            class="max-w-[85%] rounded-2xl px-3.5 py-2 text-[13px] leading-relaxed whitespace-pre-line"
-                            :class="msg.role === 'user' ? 'rounded-br-sm bg-neutral-900 text-white' : 'rounded-bl-sm border border-neutral-200 bg-white text-neutral-700'"
-                            x-text="msg.text"
-                        ></div>
-                    </div>
-                </template>
-
-                <div x-show="chatLoading" class="flex justify-start" x-cloak>
-                    <div class="rounded-2xl rounded-bl-sm border border-neutral-200 bg-white px-4 py-2.5">
-                        <div class="flex items-center gap-1.5">
-                            <span class="h-1.5 w-1.5 rounded-full bg-neutral-400 animate-bounce"></span>
-                            <span class="h-1.5 w-1.5 rounded-full bg-neutral-400 animate-bounce [animation-delay:120ms]"></span>
-                            <span class="h-1.5 w-1.5 rounded-full bg-neutral-400 animate-bounce [animation-delay:240ms]"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Input -->
-            <div class="border-t border-neutral-100 p-3 bg-white">
-                <form @submit.prevent="sendChat()" class="flex items-center gap-2">
-                    <input
-                        id="chat-input"
-                        type="text"
-                        x-model="chatMessage"
-                        @keydown.enter.exact.prevent="sendChat()"
-                        maxlength="500"
-                        placeholder="Tanya apa saja..."
-                        class="flex-1 h-10 rounded-full border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-800 outline-none placeholder:text-neutral-400 focus:border-neutral-400 focus:bg-white transition"
-                    >
-                    <button
-                        type="submit"
-                        :disabled="chatLoading || !chatMessage.trim()"
-                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white transition hover:bg-neutral-700 disabled:opacity-30"
-                        aria-label="Kirim"
-                    >
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-6-6 6 6-6 6"/></svg>
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Launcher -->
-        <div class="flex items-center justify-end">
-            <button
-                @click="chatOpen ? chatOpen = false : openChat()"
-                class="relative flex h-14 w-14 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg transition hover:scale-105 hover:bg-neutral-800 active:scale-95"
-                aria-label="Buka AI Assistant"
-            >
-                <template x-if="!chatOpen">
-                    <span class="text-sm font-bold tracking-tight">AI</span>
-                </template>
-                <template x-if="chatOpen">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg>
-                </template>
-                <span x-show="!chatOpen && chatHint" class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-bold text-white">1</span>
-            </button>
-        </div>
-    </div>
 
     <!-- FOOTER -->
     <footer class="bg-neutral-950 text-white">
@@ -933,7 +1001,7 @@
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-1">
                         <span class="text-xl font-semibold tracking-tight">Konvexa</span>
-                        <span class="text-xl font-light text-neutral-500 tracking-tight">Official</span>
+                        <span class="text-xl font-light text-neutral-500 tracking-tight">Apparel</span>
                     </div>
                     <p class="mt-4 max-w-xs text-sm text-neutral-500 font-light leading-relaxed">
                         Konveksi modern yang menghadirkan produk apparel berkualitas dengan harga terjangkau.
@@ -946,7 +1014,7 @@
                         <a href="#beranda" class="block text-sm text-neutral-500 hover:text-white transition">Beranda</a>
                         <a href="#tentang" class="block text-sm text-neutral-500 hover:text-white transition">Tentang Kami</a>
                         <a href="#kategori" class="block text-sm text-neutral-500 hover:text-white transition">Katalog</a>
-                        <a href="#produk" class="block text-sm text-neutral-500 hover:text-white transition">Produk</a>
+                        <a href="#lokasi" class="block text-sm text-neutral-500 hover:text-white transition">Lokasi</a>
                     </div>
                 </div>
 
@@ -962,11 +1030,12 @@
             </div>
 
             <div class="mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between gap-2">
-                <p class="text-xs text-neutral-600">© 2026 Konvexa Official. All rights reserved.</p>
+                <p class="text-xs text-neutral-600">© 2026 Konvexa Apparel. All rights reserved.</p>
                 <p class="text-xs text-neutral-600">Crafted for modern konveksi.</p>
             </div>
         </div>
     </footer>
 
 </body>
-</html><?php /**PATH C:\laragon\www\ecomerce-knv\resources\views/welcome.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\laragon\www\ecomerce-knv\resources\views/welcome.blade.php ENDPATH**/ ?>

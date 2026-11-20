@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
-
 class Category extends Model
 {
     protected $fillable = [
@@ -22,15 +21,18 @@ class Category extends Model
         'order' => 'integer',
     ];
 
-public function products() { return $this->hasMany(Product::class); }
-
-public function getImageUrlAttribute(): string
-{
-    if (! $this->image) {
-        return 'https://placehold.co/600x750';
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
     }
 
-    return Storage::disk(config('filament.default_filesystem_disk', 'public'))->url($this->image);
-}
+    public function getImageUrlAttribute(): string
+    {
+        if (! $this->image) {
+            return 'https://placehold.co/600x750';
+        }
+
+        return Storage::disk('public')->url($this->image);
+    }
 
 }

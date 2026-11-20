@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semua Produk | Konvexa Official</title>
-    <meta name="description" content="Katalog lengkap produk Konvexa Official — konveksi murah berkualitas untuk kaos, kemeja, seragam, dan apparel custom.">
+    <title>Semua Produk | Konvexa Apparel</title>
+    <meta name="description" content="Katalog lengkap produk Konvexa Apparel — konveksi murah berkualitas untuk kaos, kemeja, seragam, dan apparel custom.">
     <meta name="theme-color" content="#171717">
+    <link rel="icon" type="image/png" sizes="64x64" href="<?php echo e(asset('favicon-konvexa.png')); ?>?v=1">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -60,7 +61,7 @@
             <div class="h-16 flex items-center justify-between">
                 <a href="<?php echo e(route('home')); ?>" class="flex items-center gap-1 group">
                     <span class="text-xl font-semibold tracking-tight text-neutral-900">Konvexa</span>
-                    <span class="text-xl font-light tracking-tight text-neutral-400">Official</span>
+                    <span class="text-xl font-light tracking-tight text-neutral-400">Apparel</span>
                 </a>
 
                 <div class="hidden md:flex items-center gap-1">
@@ -123,14 +124,14 @@
                 <p class="text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-400 mb-3">Catalog</p>
                 <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900">Semua Produk</h1>
                 <p class="mt-3 max-w-lg text-sm text-neutral-500 font-light leading-relaxed">
-                    Jelajahi seluruh koleksi Konvexa Official. Filter berdasarkan kategori yang kamu butuhkan.
+                    Jelajahi seluruh koleksi Konvexa Apparel. Filter berdasarkan kategori yang kamu butuhkan.
                 </p>
 
                 <!-- Banner panjang -->
                 <div class="mt-8 relative w-full h-28 sm:h-36 lg:h-40 rounded-2xl overflow-hidden">
                     <img
                         src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80"
-                        alt="Koleksi produk Konvexa Official"
+                        alt="Koleksi produk Konvexa Apparel"
                         class="w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
@@ -150,13 +151,13 @@
                        class="filter-chip px-3.5 py-1.5 rounded-full text-xs font-medium border border-neutral-200 text-neutral-600 hover:border-neutral-400 <?php echo e(request('category') ? '' : 'active'); ?>">
                         Semua
                     </a>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <a href="<?php echo e(route('produk.index', ['category' => $category->slug])); ?>"
                            class="filter-chip px-3.5 py-1.5 rounded-full text-xs font-medium border border-neutral-200 text-neutral-600 hover:border-neutral-400 <?php echo e(request('category') === $category->slug ? 'active' : ''); ?>">
                             <?php echo e($category->name); ?>
 
                         </a>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
         </section>
@@ -171,7 +172,7 @@
                     </p>
                 </div>
 
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($products->isEmpty()): ?>
+                <?php if($products->isEmpty()): ?>
                     <div class="py-20 text-center">
                         <p class="text-sm font-medium text-neutral-800">Tidak ada produk</p>
                         <p class="mt-1 text-xs text-neutral-400">Coba pilih kategori lain</p>
@@ -182,7 +183,7 @@
                     </div>
                 <?php else: ?>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <article class="product-card group bg-white rounded-2xl overflow-hidden border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition-all duration-500">
 <div class="relative aspect-[3/4] overflow-hidden bg-white">
     <img
@@ -198,34 +199,21 @@
                                 <div class="p-4">
                                     <p class="text-[10px] uppercase tracking-wider text-neutral-400 mb-1"><?php echo e($product->category?->name); ?></p>
                                     <h2 class="font-medium text-sm leading-snug text-neutral-800 line-clamp-2 min-h-[40px]"><?php echo e($product->name); ?></h2>
-                                    <div class="mt-4">
-                                        <p class="text-base font-semibold tracking-tight text-neutral-900">
-                                            Rp<?php echo e(number_format($product->price, 0, ',', '.')); ?>
-
-                                        </p>
-                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($product->original_price && $product->original_price > $product->price): ?>
-                                            <p class="mt-0.5 text-xs text-neutral-400 line-through">
-                                                Rp<?php echo e(number_format($product->original_price, 0, ',', '.')); ?>
-
-                                            </p>
-                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                                    </div>
-
-                                    <a href="https://wa.me/62895411146879?text=<?php echo e(urlencode('Halo Konvexa, saya tertarik dengan produk ' . $product->name)); ?>"
+                                    <a href="https://wa.me/<?php echo e($whatsappNumber); ?>?text=<?php echo e(urlencode('Halo Konvexa, saya tertarik dengan produk ' . $product->name)); ?>"
                                        target="_blank" rel="noopener noreferrer"
-                                       class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-neutral-200 px-4 py-2.5 text-xs font-medium text-neutral-700 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition">
-                                        Pesan via WhatsApp
+                                       class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-neutral-900 px-4 py-2.5 text-xs font-medium text-white hover:bg-neutral-700 transition">
+                                        Hubungi Admin
                                     </a>
                                 </div>
                             </article>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
 
                     <div class="mt-10">
                         <?php echo e($products->links()); ?>
 
                     </div>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php endif; ?>
             </div>
         </section>
     </main>
@@ -237,7 +225,7 @@
                     <div class="lg:col-span-2">
                     <div class="flex items-center gap-1">
                         <span class="text-xl font-semibold tracking-tight">Konvexa</span>
-                        <span class="text-xl font-light text-neutral-500 tracking-tight">Official</span>
+                        <span class="text-xl font-light text-neutral-500 tracking-tight">Apparel</span>
                     </div>
                     <p class="mt-4 max-w-xs text-sm text-neutral-500 font-light leading-relaxed">
                         Konveksi modern yang menghadirkan produk apparel berkualitas dengan harga terjangkau.
@@ -263,7 +251,7 @@
                 </div>
             </div>
             <div class="mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between gap-2">
-                <p class="text-xs text-neutral-600">© 2026 Konvexa Official. All rights reserved.</p>
+                <p class="text-xs text-neutral-600">© 2026 Konvexa Apparel. All rights reserved.</p>
                 <p class="text-xs text-neutral-600">Crafted for modern konveksi.</p>
             </div>
         </div>

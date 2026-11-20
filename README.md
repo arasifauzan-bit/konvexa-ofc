@@ -56,3 +56,17 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Admin Panel
+
+The custom admin panel is available at `/admin/login`. It includes a dashboard and category management; admin routes require an account marked as an administrator.
+
+Set `ADMIN_NAME`, `ADMIN_EMAIL`, and a unique `ADMIN_PASSWORD` of at least 12 characters in the production hosting environment, then run:
+
+```bash
+php artisan migrate --force
+php artisan db:seed --force
+php artisan storage:link
+```
+
+Keep the admin credentials out of source control. The database seeder creates or updates the admin account from those environment values.

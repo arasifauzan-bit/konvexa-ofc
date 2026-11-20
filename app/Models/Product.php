@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -35,29 +34,13 @@ class Product extends Model
         'order'       => 'integer',
     ];
 
-    /**
-     * Bersihkan indeks cache milik chatbot setiap kali produk
-     * dibuat, diubah, atau dihapus, supaya bot tidak pernah
-     * menyebut produk yang sudah tidak aktif atau harga lama.
-     */
-    protected static function booted(): void
-    {
-        $bersihkan = function (): void {
-            Cache::forget('konvexa.chat.index.produk');
-            Cache::forget('konvexa.chat.index.kategori');
-        };
-
-        static::saved($bersihkan);
-        static::deleted($bersihkan);
-    }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
     /**
-     * Hanya produk yang tampil di halaman publik dan chatbot.
+     * Hanya produk yang tampil di halaman publik.
      * Pakai: Product::active()->get();
      */
     public function scopeActive(Builder $query): Builder
@@ -83,8 +66,7 @@ class Product extends Model
     }
 
     /**
-     * Harga terformat, dipakai di Blade dan balasan chatbot
-     * agar format "Rp1.234.567" tidak diulang di banyak tempat.
+     * Harga terformat agar format "Rp1.234.567" tidak diulang di banyak tempat.
      */
     public function getFormattedPriceAttribute(): string
     {
@@ -99,12 +81,12 @@ class Product extends Model
     }
 
     public function getImageUrlAttribute(): string
-{
-    if (! $this->image) {
-        return 'https://placehold.co/600x750';
-    }
+    {
+        if (! $this->image) {
+            return 'https://placehold.co/600x750';
+        }
 
-    return Storage::disk(config('filament.default_filesystem_disk', 'public'))->url($this->image);
-}
+        return Storage::disk('public')->url($this->image);
+    }
 
 }
