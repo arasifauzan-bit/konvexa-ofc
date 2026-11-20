@@ -798,7 +798,7 @@
                     <h2 class="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Katalog Pilihan</h2>
                 </div>
                 <p class="reveal reveal-delay-1 max-w-sm text-sm leading-6 text-slate-600">
-                    Pilih kategori seragam dan apparel custom untuk kebutuhan tim, komunitas, maupun brand Anda.
+                    Pilih kategori dan apparel custom untuk kebutuhan tim, komunitas, maupun brand Anda.
                 </p>
             </div>
 
