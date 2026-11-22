@@ -262,6 +262,7 @@
         searchOpen: false,
         contactOpen: false,
         helpOpen: false,
+        trackingHint: false,
         searchQuery: '',
         active: 'beranda',
         scrolled: false,
@@ -310,6 +311,10 @@
             this.contactOpen = false;
         },
 
+        dismissTrackingHint() {
+            this.trackingHint = false;
+        },
+
         get filteredCategories() {
             const q = this.searchQuery.trim().toLowerCase();
             if (!q) return this.categories;
@@ -320,6 +325,12 @@
     @scroll.window.passive="onScroll()"
     @keydown.escape.window="if (contactOpen) closeContact(); else if (searchOpen) closeSearch(); else if (helpOpen) helpOpen = false; else mobileMenu = false"
     x-init="
+        if (window.innerWidth < 1024 && !sessionStorage.getItem('konvexaTrackingHintSeen')) {
+            trackingHint = true;
+            sessionStorage.setItem('konvexaTrackingHintSeen', '1');
+            setTimeout(() => trackingHint = false, 10000);
+        }
+
         const sections = document.querySelectorAll('section[id]');
         if (sections.length) {
             const sectionObserver = new IntersectionObserver(
@@ -448,16 +459,51 @@
                 </div>
 
                 <div class="flex items-center gap-1">
-                    <a
-                        href="<?php echo e(route('tracking.index')); ?>"
-                        aria-label="Tracking Pesanan"
-                        class="group inline-flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-black px-0 text-white transition-colors duration-300 hover:bg-neutral-900 sm:h-auto sm:w-auto sm:px-4 sm:py-2"
-                    >
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 4.5h8M8 10h8M8 14h5m-8 7h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z"/>
-                        </svg>
-                        <span class="hidden text-xs font-semibold sm:inline">Tracking Pesanan</span>
-                    </a>
+                    <div class="relative">
+                        <a
+                            href="<?php echo e(route('tracking.index')); ?>"
+                            aria-label="Tracking Pesanan"
+                            class="group inline-flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-black px-0 text-white transition-colors duration-300 hover:bg-neutral-900 sm:h-auto sm:w-auto sm:px-4 sm:py-2"
+                        >
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 4.5h8M8 10h8M8 14h5m-8 7h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z"/>
+                            </svg>
+                            <span class="hidden text-xs font-semibold sm:inline">Tracking Pesanan</span>
+                        </a>
+
+                        <div
+                            x-show="trackingHint"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 -translate-y-2 scale-95"
+                            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-1"
+                            class="absolute right-0 top-full z-[70] mt-3 w-64 lg:hidden"
+                            role="status"
+                            aria-live="polite"
+                        >
+                            <a
+                                href="<?php echo e(route('tracking.index')); ?>"
+                                class="relative block rounded-2xl border border-slate-200 bg-white px-4 py-3.5 pr-9 shadow-[0_12px_32px_rgba(15,23,42,0.16)]"
+                            >
+                                <span class="absolute -top-1.5 right-4 h-3 w-3 rotate-45 border-l border-t border-slate-200 bg-white"></span>
+                                <span class="block text-xs font-semibold text-slate-950">Sudah pesan? Cek statusnya</span>
+                                <span class="mt-1 block text-[11px] text-slate-500">Buka Tracking Pesanan →</span>
+                            </a>
+                            <button
+                                type="button"
+                                @click.stop.prevent="dismissTrackingHint()"
+                                class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                                aria-label="Tutup notifikasi tracking"
+                            >
+                                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 6l12 12M18 6 6 18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                     <button
                         type="button"
                         @click="openSearch()"
