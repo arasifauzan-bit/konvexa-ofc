@@ -35,14 +35,20 @@ class OrderTrackingController extends Controller
         ]);
 
         $orderNumber = Str::upper(trim($validated['order_number']));
-        $orderTracking = OrderTracking::query()
+        $matchingOrderNumber = OrderTracking::query()
             ->where('order_number', $orderNumber)
-            ->where('customer_name', $validated['customer_name'])
             ->first();
+        $orderTracking = $matchingOrderNumber
+            && $matchingOrderNumber->customer_name === $validated['customer_name']
+                ? $matchingOrderNumber
+                : null;
 
         return view('tracking.index', [
             'orderTracking' => $orderTracking,
             'searched' => true,
+            'lookupState' => $matchingOrderNumber
+                ? ($orderTracking ? 'found' : 'name_mismatch')
+                : 'not_found',
             'statuses' => OrderTracking::STATUS_OPTIONS,
             'currentStatusIndex' => $orderTracking
                 ? array_search($orderTracking->status, array_keys(OrderTracking::STATUS_OPTIONS), true)

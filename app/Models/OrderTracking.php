@@ -10,16 +10,17 @@ class OrderTracking extends Model
     public const STATUS_OPTIONS = [
         'antrian' => 'Dalam antrean proses',
         'pembelian_bahan' => 'Pembelian bahan',
-        'jahit' => 'Jahit',
-        'bordir' => 'Bordir',
+        'produksi' => 'Proses Produksi (Potong, Jahit, Bordir/Sablon)',
         'finishing' => 'Finishing',
         'dapat_diambil' => 'Dapat diambil',
+        'selesai' => 'Selesai',
     ];
 
     protected $fillable = [
         'order_number',
         'customer_name',
         'status',
+        'progress_note',
     ];
 
     public function setCustomerNameAttribute(?string $value): void

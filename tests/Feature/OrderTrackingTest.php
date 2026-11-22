@@ -31,7 +31,8 @@ class OrderTrackingTest extends TestCase
         OrderTracking::query()->create([
             'order_number' => 'KVX2610112',
             'customer_name' => 'KEVIN',
-            'status' => 'jahit',
+            'status' => 'produksi',
+            'progress_note' => 'Bordir dulu, kemudian dijahit.',
         ]);
 
         $this->post(route('tracking.lookup'), [
@@ -40,9 +41,13 @@ class OrderTrackingTest extends TestCase
         ])
             ->assertOk()
             ->assertSee('KVX2610112')
-            ->assertSee('Jahit')
+            ->assertSee('Proses Produksi (Potong, Jahit, Bordir/Sablon)')
+            ->assertSee('Bordir dulu, kemudian dijahit.')
             ->assertSee('Sedang berlangsung')
-            ->assertSee('Finishing');
+            ->assertSee('Finishing')
+            ->assertSee('Selesai')
+            ->assertSee('Terakhir diperbarui ' . OrderTracking::query()->firstOrFail()->updated_at->format('d/m/Y'))
+            ->assertDontSee(OrderTracking::query()->firstOrFail()->updated_at->format('H:i'));
     }
 
     public function test_tracking_lookup_does_not_reveal_orders_when_name_does_not_match(): void
@@ -50,7 +55,7 @@ class OrderTrackingTest extends TestCase
         OrderTracking::query()->create([
             'order_number' => 'KVX2610112',
             'customer_name' => 'KEVIN',
-            'status' => 'jahit',
+            'status' => 'produksi',
         ]);
 
         $this->post(route('tracking.lookup'), [
@@ -58,8 +63,21 @@ class OrderTrackingTest extends TestCase
             'customer_name' => 'RINA',
         ])
             ->assertOk()
-            ->assertSee('Pesanan tidak ditemukan')
+            ->assertSee('Nomor pesanan sudah sesuai, tetapi nama pemesan tidak cocok.')
+            ->assertSee('Coba cek kembali nama pada nota Anda.')
             ->assertDontSee('Progres produksi pesanan Anda');
+    }
+
+    public function test_tracking_lookup_tells_customer_when_order_has_not_been_added(): void
+    {
+        $this->post(route('tracking.lookup'), [
+            'order_number' => 'KVX2610112',
+            'customer_name' => 'KEVIN',
+        ])
+            ->assertOk()
+            ->assertSee('Pesanan belum ditambahkan oleh admin.')
+            ->assertSee('Silakan hubungi admin')
+            ->assertDontSee('Nomor pesanan sudah sesuai');
     }
 
     public function test_admin_can_create_and_update_tracking_status(): void
@@ -91,6 +109,39 @@ class OrderTrackingTest extends TestCase
             'customer_name' => 'KEVIN',
             'status' => 'pembelian_bahan',
         ]);
+
+        $this->put(route('admin.tracking.update', $orderTracking), [
+            'order_number' => 'KVX2610112',
+            'customer_name' => 'Kevin',
+            'status' => 'selesai',
+            'progress_note' => '',
+        ])
+            ->assertRedirect(route('admin.tracking.index'));
+
+        $this->post(route('tracking.lookup'), [
+            'order_number' => 'KVX2610112',
+            'customer_name' => 'Kevin',
+        ])
+            ->assertOk()
+            ->assertSee('Selesai')
+            ->assertSee('Pesanan Anda telah selesai dan diserahkan.');
+    }
+
+    public function test_admin_tracking_list_shows_update_date_without_time(): void
+    {
+        $admin = User::factory()->create();
+        $admin->forceFill(['is_admin' => true])->save();
+        $orderTracking = OrderTracking::query()->create([
+            'order_number' => 'KVX2610112',
+            'customer_name' => 'KEVIN',
+            'status' => 'produksi',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.tracking.index'))
+            ->assertOk()
+            ->assertSee($orderTracking->updated_at->format('d/m/Y'))
+            ->assertDontSee($orderTracking->updated_at->format('H:i'));
     }
 
     public function test_guest_cannot_manage_tracking_orders(): void

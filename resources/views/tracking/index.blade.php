@@ -81,9 +81,13 @@
             </button>
         </form>
 
-        @if ($searched && ! $orderTracking)
+        @if ($searched && $lookupState === 'not_found')
             <div role="status" class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-900">
-                Pesanan tidak ditemukan. Periksa kembali nomor pesanan dan nama pelanggan Anda.
+                Pesanan belum ditambahkan oleh admin. Silakan hubungi admin untuk memastikan pesanan Anda sudah dimasukkan ke sistem tracking.
+            </div>
+        @elseif ($searched && $lookupState === 'name_mismatch')
+            <div role="status" class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-900">
+                Nomor pesanan sudah sesuai, tetapi nama pemesan tidak cocok. Coba cek kembali nama pada nota Anda. Jika masih belum berhasil, silakan hubungi admin.
             </div>
         @endif
 
@@ -102,7 +106,13 @@
 
                 <div class="px-5 py-6 sm:px-7 sm:py-7">
                     <p class="text-sm font-semibold text-slate-900">
-                        {{ $orderTracking->status === 'dapat_diambil' ? 'Pesanan Anda siap diambil.' : 'Progres produksi pesanan Anda' }}
+                        @if ($orderTracking->status === 'dapat_diambil')
+                            Pesanan Anda siap diambil.
+                        @elseif ($orderTracking->status === 'selesai')
+                            Pesanan Anda telah selesai dan diserahkan.
+                        @else
+                            Progres produksi pesanan Anda
+                        @endif
                     </p>
                     <ol class="mt-6">
                         @foreach ($statuses as $status => $label)
@@ -128,13 +138,16 @@
                                     <p class="text-sm {{ $isCurrent ? 'font-semibold text-slate-950' : ($isComplete ? 'font-medium text-slate-700' : 'text-slate-400') }}">{{ $label }}</p>
                                     @if ($isCurrent)
                                         <p class="mt-1 text-xs font-medium text-sky-700">Sedang berlangsung</p>
+                                        @if ($status === 'produksi' && $orderTracking->progress_note)
+                                            <p class="mt-2 max-w-xl text-xs leading-5 text-slate-500">{{ $orderTracking->progress_note }}</p>
+                                        @endif
                                     @endif
                                 </div>
                             </li>
                         @endforeach
                     </ol>
                     <p class="mt-6 border-t border-slate-100 pt-4 text-xs text-slate-400">
-                        Terakhir diperbarui {{ $orderTracking->updated_at->format('d/m/Y, H:i') }}
+                        Terakhir diperbarui {{ $orderTracking->updated_at->format('d/m/Y') }}
                     </p>
                 </div>
             </section>

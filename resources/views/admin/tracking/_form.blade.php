@@ -25,3 +25,12 @@
     </select>
     @error('status') <p class="mt-1.5 text-xs text-rose-600">{{ $message }}</p> @enderror
 </div>
+
+<div>
+    <label for="progress_note" class="text-sm font-semibold text-slate-800">Keterangan proses <span class="font-normal text-slate-400">(opsional)</span></label>
+    <textarea id="progress_note" name="progress_note" rows="3" maxlength="500"
+              placeholder="Contoh: Bordir dulu, kemudian dijahit."
+              class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-slate-500">{{ old('progress_note', $orderTracking->progress_note) }}</textarea>
+    <p class="mt-1.5 text-xs text-slate-400">Gunakan keterangan ini untuk menjelaskan urutan jahit dan bordir sesuai pesanan.</p>
+    @error('progress_note') <p class="mt-1.5 text-xs text-rose-600">{{ $message }}</p> @enderror
+</div>

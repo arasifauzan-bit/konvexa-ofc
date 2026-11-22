@@ -38,7 +38,7 @@
                             <td class="px-5 py-4">
                                 <span class="rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-800">{{ $orderTracking->status_label }}</span>
                             </td>
-                            <td class="px-5 py-4 text-sm text-slate-500">{{ $orderTracking->updated_at->format('d/m/Y H:i') }}</td>
+                            <td class="px-5 py-4 text-sm text-slate-500">{{ $orderTracking->updated_at->format('d/m/Y') }}</td>
                             <td class="px-5 py-4 text-right">
                                 <a href="{{ route('admin.tracking.edit', $orderTracking) }}" class="text-sm font-semibold text-slate-700 hover:text-slate-950">Edit</a>
                             </td>

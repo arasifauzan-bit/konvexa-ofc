@@ -77,6 +77,7 @@ class OrderTrackingController extends Controller
             'order_number' => ['required', 'string', 'max:32', 'regex:/^[A-Z0-9-]+$/', $uniqueOrderNumber],
             'customer_name' => ['required', 'string', 'max:100'],
             'status' => ['required', Rule::in(array_keys(OrderTracking::STATUS_OPTIONS))],
+            'progress_note' => ['nullable', 'string', 'max:500'],
         ], [
             'order_number.regex' => 'Nomor pesanan hanya boleh berisi huruf, angka, dan tanda hubung.',
         ]);
