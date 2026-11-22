@@ -91,6 +91,7 @@ class AdminPanelTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.categories.index'))
             ->assertOk()
+            ->assertSee('Tracking Pesanan')
             ->assertSee('Kategori katalog');
 
         $this->get(route('admin.categories.create'))

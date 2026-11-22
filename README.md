@@ -70,3 +70,9 @@ php artisan storage:link
 ```
 
 Keep the admin credentials out of source control. The database seeder creates or updates the admin account from those environment values.
+
+## Konvexa order tracking integration
+
+Konvexa can create tracking records through the protected `POST /api/integrations/order-tracking` endpoint. Set `KONVEXA_TRACKING_TOKEN` in this application's environment and configure the same secret in Konvexa. New records start in `antrian`; repeated synchronization may update the customer name but never overwrites the status managed by an administrator.
+
+Use HTTPS when the tracking website is accessed outside the local development environment so the bearer token is not sent over an unencrypted connection.

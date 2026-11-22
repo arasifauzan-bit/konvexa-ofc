@@ -31,6 +31,10 @@
                    class="whitespace-nowrap rounded-xl px-3 py-2.5 text-sm transition {{ request()->routeIs('admin.dashboard') ? 'bg-white text-slate-950 font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                     Dashboard
                 </a>
+                <a href="{{ route('admin.tracking.index') }}"
+                   class="whitespace-nowrap rounded-xl px-3 py-2.5 text-sm transition {{ request()->routeIs('admin.tracking.*') ? 'bg-white text-slate-950 font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
+                    Tracking Pesanan
+                </a>
                 <a href="{{ route('admin.categories.index') }}"
                    class="whitespace-nowrap rounded-xl px-3 py-2.5 text-sm transition {{ request()->routeIs('admin.categories.*') ? 'bg-white text-slate-950 font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                     Kategori

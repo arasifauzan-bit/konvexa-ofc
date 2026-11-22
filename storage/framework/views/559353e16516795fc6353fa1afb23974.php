@@ -374,7 +374,7 @@
                     >Apparel</span>
                 </a>
 
-                <div class="hidden md:flex items-center gap-0.5">
+                <div class="hidden lg:flex items-center gap-0.5">
                     <a href="#beranda" @click="setActive('beranda')"
                        class="nav-link px-3.5 py-2 text-[13px] font-medium transition-colors duration-300"
                        :class="active === 'beranda' ? 'active text-black' : 'text-black hover:text-black'">Beranda</a>
@@ -416,15 +416,20 @@
                 </div>
 
                 <div class="flex items-center gap-1">
-                    <button
-                        type="button"
-                        @click="openContact()"
-                        class="hidden md:inline-flex items-center rounded-full bg-black px-4 py-2 text-xs font-semibold text-white transition-colors duration-300 hover:bg-neutral-900"
-                    >Minta Penawaran</button>
+                    <a
+                        href="<?php echo e(route('tracking.index')); ?>"
+                        aria-label="Tracking Pesanan"
+                        class="group inline-flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-black px-0 text-white transition-colors duration-300 hover:bg-neutral-900 sm:h-auto sm:w-auto sm:px-4 sm:py-2"
+                    >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8 4.5h8M8 10h8M8 14h5m-8 7h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z"/>
+                        </svg>
+                        <span class="hidden text-xs font-semibold sm:inline">Tracking Pesanan</span>
+                    </a>
                     <button
                         type="button"
                         @click="openSearch()"
-                        class="ml-1 inline-flex h-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 text-slate-700 transition-colors duration-300 hover:bg-slate-50 md:border-black md:bg-transparent md:text-black md:hover:bg-black md:hover:text-white"
+                        class="ml-1 inline-flex h-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 text-slate-700 transition-colors duration-300 hover:bg-slate-50 lg:border-black lg:bg-transparent lg:text-black lg:hover:bg-black lg:hover:text-white"
                         aria-label="Cari Kategori"
                     >
                         <svg class="h-[17px] w-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,7 +441,7 @@
                     <button
                         type="button"
                         @click="mobileMenu = !mobileMenu; helpOpen = false"
-                        class="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-700 transition-colors duration-300 hover:bg-slate-50"
+                        class="lg:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-700 transition-colors duration-300 hover:bg-slate-50"
                         :aria-label="mobileMenu ? 'Tutup menu' : 'Buka menu'"
                         :aria-expanded="mobileMenu"
                         aria-controls="mobile-navigation"
@@ -462,7 +467,7 @@
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 -translate-y-2"
             id="mobile-navigation"
-            class="md:hidden max-h-[calc(100vh-5rem)] overflow-y-auto px-3 pb-3 pt-2"
+            class="lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto px-3 pb-3 pt-2"
         >
             <div class="rounded-2xl border border-slate-200/80 bg-white/95 p-2.5 shadow-[0_14px_36px_rgba(15,23,42,0.11)] backdrop-blur-xl">
                 <nav aria-label="Navigasi utama" class="divide-y divide-slate-100">
@@ -513,18 +518,6 @@
                     <a href="#cara-order" @click="setActive('faq')" class="rounded-lg bg-slate-50 px-3 py-2.5 text-center text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Cara Order</a>
                     <a href="#faq" @click="setActive('faq')" class="rounded-lg bg-slate-50 px-3 py-2.5 text-center text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">FAQ</a>
                 </div>
-                <button
-                    type="button"
-                    @click="openContact()"
-                    class="group mt-2 inline-flex w-full items-center justify-between rounded-full bg-gradient-to-r from-slate-950 to-slate-800 py-2 pl-5 pr-2 text-sm font-semibold text-white transition hover:from-slate-800 hover:to-slate-700"
-                >
-                    Minta Penawaran
-                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition group-hover:bg-white/20">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 12h14m-6-6 6 6-6 6"/>
-                        </svg>
-                    </span>
-                </button>
             </div>
         </div>
     </nav>
