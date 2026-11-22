@@ -131,6 +131,16 @@
             -webkit-backdrop-filter: blur(16px);
         }
 
+        @media (max-width: 767px) {
+            .navbar-top {
+                background: rgba(255, 255, 255, 0.9);
+                border-color: rgba(15, 23, 42, 0.06);
+                box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+            }
+        }
+
         ::selection {
             background: #171717;
             color: #fff;
@@ -276,7 +286,7 @@
 
     }"
     @scroll.window.passive="onScroll()"
-    @keydown.escape.window="if (contactOpen) closeContact(); else if (searchOpen) closeSearch(); else helpOpen = false"
+    @keydown.escape.window="if (contactOpen) closeContact(); else if (searchOpen) closeSearch(); else if (helpOpen) helpOpen = false; else mobileMenu = false"
     x-init="
         const sections = document.querySelectorAll('section[id]');
         if (sections.length) {
@@ -412,8 +422,9 @@
                         class="hidden md:inline-flex items-center rounded-full bg-black px-4 py-2 text-xs font-semibold text-white transition-colors duration-300 hover:bg-neutral-900"
                     >Minta Penawaran</button>
                     <button
+                        type="button"
                         @click="openSearch()"
-                        class="ml-1 inline-flex h-10 items-center gap-2 rounded-full border border-black px-3 text-black transition-colors duration-300 hover:bg-black hover:text-white"
+                        class="ml-1 inline-flex h-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 text-slate-700 transition-colors duration-300 hover:bg-slate-50 md:border-black md:bg-transparent md:text-black md:hover:bg-black md:hover:text-white"
                         aria-label="Cari Kategori"
                     >
                         <svg class="h-[17px] w-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -423,14 +434,17 @@
                     </button>
 
                     <button
-                        @click="mobileMenu = !mobileMenu"
-                        class="md:hidden flex h-9 w-9 items-center justify-center rounded-full text-black transition-colors duration-300 hover:bg-black hover:text-white"
-                        aria-label="Menu"
+                        type="button"
+                        @click="mobileMenu = !mobileMenu; helpOpen = false"
+                        class="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-700 transition-colors duration-300 hover:bg-slate-50"
+                        :aria-label="mobileMenu ? 'Tutup menu' : 'Buka menu'"
+                        :aria-expanded="mobileMenu"
+                        aria-controls="mobile-navigation"
                     >
-                        <svg x-show="!mobileMenu" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="!mobileMenu" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
-                        <svg x-show="mobileMenu" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="mobileMenu" x-cloak class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M6 6l12 12M18 6 6 18"/>
                         </svg>
                     </button>
@@ -447,31 +461,70 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 -translate-y-2"
-            class="md:hidden border-t border-slate-100 bg-white/95 px-5 py-3 backdrop-blur-xl transition-colors duration-300"
+            id="mobile-navigation"
+            class="md:hidden max-h-[calc(100vh-5rem)] overflow-y-auto px-3 pb-3 pt-2"
         >
-            <div class="space-y-0.5">
-                <a href="#beranda" @click="setActive('beranda')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Beranda</a>
-                <a href="#tentang" @click="setActive('tentang')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Tentang Kami</a>
-                <a href="#kategori" @click="setActive('kategori')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Katalog</a>
-                <a href="#lokasi" @click="setActive('lokasi')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Lokasi</a>
-                <a href="#kontak" @click="setActive('kontak')" class="block rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Kontak</a>
-                <div>
+            <div class="rounded-2xl border border-slate-200/80 bg-white/95 p-2.5 shadow-[0_14px_36px_rgba(15,23,42,0.11)] backdrop-blur-xl">
+                <nav aria-label="Navigasi utama" class="divide-y divide-slate-100">
+                    <a href="#beranda" @click="setActive('beranda')"
+                       :class="active === 'beranda' ? 'font-semibold text-slate-950' : 'text-slate-600 hover:text-slate-950'"
+                       class="group flex items-center justify-between rounded-lg px-3.5 py-3 text-sm transition">
+                        <span class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-transparent transition" :class="active === 'beranda' ? 'bg-sky-500' : ''"></span>Beranda</span>
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="m9 18 6-6-6-6"/></svg>
+                    </a>
+                    <a href="#tentang" @click="setActive('tentang')"
+                       :class="active === 'tentang' ? 'font-semibold text-slate-950' : 'text-slate-600 hover:text-slate-950'"
+                       class="group flex items-center justify-between rounded-lg px-3.5 py-3 text-sm transition">
+                        <span class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-transparent transition" :class="active === 'tentang' ? 'bg-sky-500' : ''"></span>Tentang Kami</span>
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="m9 18 6-6-6-6"/></svg>
+                    </a>
+                    <a href="#kategori" @click="setActive('kategori')"
+                       :class="active === 'kategori' ? 'font-semibold text-slate-950' : 'text-slate-600 hover:text-slate-950'"
+                       class="group flex items-center justify-between rounded-lg px-3.5 py-3 text-sm transition">
+                        <span class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-transparent transition" :class="active === 'kategori' ? 'bg-sky-500' : ''"></span>Katalog</span>
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="m9 18 6-6-6-6"/></svg>
+                    </a>
+                    <a href="#lokasi" @click="setActive('lokasi')"
+                       :class="active === 'lokasi' ? 'font-semibold text-slate-950' : 'text-slate-600 hover:text-slate-950'"
+                       class="group flex items-center justify-between rounded-lg px-3.5 py-3 text-sm transition">
+                        <span class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-transparent transition" :class="active === 'lokasi' ? 'bg-sky-500' : ''"></span>Lokasi</span>
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="m9 18 6-6-6-6"/></svg>
+                    </a>
+                    <a href="#kontak" @click="setActive('kontak')"
+                       :class="active === 'kontak' ? 'font-semibold text-slate-950' : 'text-slate-600 hover:text-slate-950'"
+                       class="group flex items-center justify-between rounded-lg px-3.5 py-3 text-sm transition">
+                        <span class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-transparent transition" :class="active === 'kontak' ? 'bg-sky-500' : ''"></span>Kontak</span>
+                        <svg class="h-4 w-4 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="m9 18 6-6-6-6"/></svg>
+                    </a>
                     <button
                         type="button"
                         @click="helpOpen = !helpOpen"
                         :aria-expanded="helpOpen"
-                        class="flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                        :class="active === 'faq' ? 'font-semibold text-slate-950' : 'text-slate-600 hover:text-slate-950'"
+                        class="flex w-full items-center justify-between rounded-lg px-3.5 py-3 text-left text-sm transition"
                     >
-                        Bantuan
+                        <span class="flex items-center gap-3"><span class="h-1.5 w-1.5 rounded-full bg-transparent transition" :class="active === 'faq' ? 'bg-sky-500' : ''"></span>Bantuan</span>
                         <svg class="h-4 w-4 transition-transform" :class="helpOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 9 6 6 6-6"/>
                         </svg>
                     </button>
-                    <div x-show="helpOpen" x-cloak x-transition class="ml-4 mt-1 space-y-0.5 border-l border-slate-200 pl-2">
-                        <a href="#cara-order" @click="setActive('faq')" class="block rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-100 hover:text-slate-900">Cara Order</a>
-                        <a href="#faq" @click="setActive('faq')" class="block rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-slate-100 hover:text-slate-900">FAQ</a>
-                    </div>
+                </nav>
+                <div x-show="helpOpen" x-cloak x-transition class="ml-6 grid grid-cols-2 gap-2 border-l border-slate-200 py-2 pl-3">
+                    <a href="#cara-order" @click="setActive('faq')" class="rounded-lg bg-slate-50 px-3 py-2.5 text-center text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Cara Order</a>
+                    <a href="#faq" @click="setActive('faq')" class="rounded-lg bg-slate-50 px-3 py-2.5 text-center text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">FAQ</a>
                 </div>
+                <button
+                    type="button"
+                    @click="openContact()"
+                    class="group mt-2 inline-flex w-full items-center justify-between rounded-full bg-gradient-to-r from-slate-950 to-slate-800 py-2 pl-5 pr-2 text-sm font-semibold text-white transition hover:from-slate-800 hover:to-slate-700"
+                >
+                    Minta Penawaran
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition group-hover:bg-white/20">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 12h14m-6-6 6 6-6 6"/>
+                        </svg>
+                    </span>
+                </button>
             </div>
         </div>
     </nav>
