@@ -99,93 +99,12 @@ class OrderTrackingTest extends TestCase
             ->assertRedirect(route('login'));
     }
 
-    public function test_tracking_api_returns_401_when_no_bearer_token_is_provided(): void
+    public function test_automatic_tracking_sync_endpoint_is_disabled(): void
     {
-        config(['services.konvexa_tracking.token' => 'test-tracking-token']);
-
         $this->postJson('/api/integrations/order-tracking', [
             'order_number' => 'KVX2610112',
             'customer_name' => 'Kevin',
-        ])->assertUnauthorized();
-
-        $this->assertDatabaseCount('order_trackings', 0);
+        ])->assertNotFound();
     }
 
-    public function test_tracking_api_returns_401_when_the_bearer_token_is_invalid(): void
-    {
-        config(['services.konvexa_tracking.token' => 'test-tracking-token']);
-
-        $this->withHeaders(['Authorization' => 'Bearer wrong-token'])
-            ->postJson('/api/integrations/order-tracking', [
-                'order_number' => 'KVX2610112',
-                'customer_name' => 'Kevin',
-            ])
-            ->assertUnauthorized();
-
-        $this->assertDatabaseCount('order_trackings', 0);
-    }
-
-    public function test_valid_tracking_api_request_creates_an_antrian_record(): void
-    {
-        config(['services.konvexa_tracking.token' => 'test-tracking-token']);
-
-        $this->withHeaders(['Authorization' => 'Bearer test-tracking-token'])
-            ->postJson('/api/integrations/order-tracking', [
-                'order_number' => ' kvx2610112 ',
-                'customer_name' => 'kEvIn',
-                'status' => 'dapat_diambil',
-            ])
-            ->assertCreated()
-            ->assertJsonPath('tracking.order_number', 'KVX2610112')
-            ->assertJsonPath('tracking.customer_name', 'KEVIN')
-            ->assertJsonPath('tracking.status', 'antrian');
-
-        $this->assertDatabaseHas('order_trackings', [
-            'order_number' => 'KVX2610112',
-            'customer_name' => 'KEVIN',
-            'status' => 'antrian',
-        ]);
-    }
-
-    public function test_tracking_api_rejects_order_numbers_with_invalid_characters(): void
-    {
-        config(['services.konvexa_tracking.token' => 'test-tracking-token']);
-
-        $this->withHeaders(['Authorization' => 'Bearer test-tracking-token'])
-            ->postJson('/api/integrations/order-tracking', [
-                'order_number' => 'KVX 2610112',
-                'customer_name' => 'Kevin',
-            ])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors(['order_number']);
-
-        $this->assertDatabaseCount('order_trackings', 0);
-    }
-
-    public function test_repeated_tracking_sync_updates_the_name_without_overwriting_admin_status(): void
-    {
-        config(['services.konvexa_tracking.token' => 'test-tracking-token']);
-        OrderTracking::query()->create([
-            'order_number' => 'KVX2610112',
-            'customer_name' => 'KEVIN',
-            'status' => 'jahit',
-        ]);
-
-        $this->withHeaders(['Authorization' => 'Bearer test-tracking-token'])
-            ->postJson('/api/integrations/order-tracking', [
-                'order_number' => 'KVX2610112',
-                'customer_name' => 'Rina',
-                'status' => 'antrian',
-            ])
-            ->assertOk()
-            ->assertJsonPath('tracking.customer_name', 'RINA')
-            ->assertJsonPath('tracking.status', 'jahit');
-
-        $this->assertDatabaseCount('order_trackings', 1);
-        $this->assertDatabaseHas('order_trackings', [
-            'order_number' => 'KVX2610112',
-            'customer_name' => 'RINA',
-            'status' => 'jahit',
-        ]);
-    }
 }

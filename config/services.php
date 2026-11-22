@@ -35,8 +35,4 @@ return [
         ],
     ],
 
-    'konvexa_tracking' => [
-        'token' => env('KONVEXA_TRACKING_TOKEN'),
-    ],
-
 ];
