@@ -4,8 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konvexa Apparel | Konveksi Murah Berkualitas</title>
+    <title>Konvexa Apparel | Konveksi & Produksi Pakaian Jogja</title>
+    <meta name="description" content="Konvexa Apparel melayani konveksi dan produksi pakaian custom di Bantul, Yogyakarta. Pesan kaos, polo, kemeja, seragam, dan apparel untuk tim atau brand Anda.">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="canonical" href="<?php echo e(route('home')); ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:site_name" content="Konvexa Apparel">
+    <meta property="og:title" content="Konvexa Apparel | Konveksi & Produksi Pakaian Jogja">
+    <meta property="og:description" content="Konveksi dan produksi pakaian custom di Bantul, Yogyakarta: kaos, polo, kemeja, seragam, dan apparel.">
+    <meta property="og:url" content="<?php echo e(route('home')); ?>">
+    <meta property="og:image" content="<?php echo e(asset('image/hero-apparel-feature.png')); ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" sizes="64x64" href="<?php echo e(asset('favicon-konvexa.png')); ?>?v=1">
+    <?php
+        $structuredData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'ClothingStore',
+            'name' => 'Konvexa Apparel',
+            'alternateName' => $siteSettings['location_name'],
+            'description' => 'Konveksi dan produksi pakaian custom di Bantul, Yogyakarta.',
+            'url' => route('home'),
+            'image' => asset('image/hero-apparel-feature.png'),
+            'telephone' => $siteSettings['whatsapp_phone'],
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $siteSettings['location_address'],
+                'addressLocality' => 'Bantul',
+                'addressRegion' => 'Daerah Istimewa Yogyakarta',
+                'postalCode' => '55181',
+                'addressCountry' => 'ID',
+            ],
+        ];
+    ?>
+    <script type="application/ld+json"><?php echo json_encode($structuredData, 15, 512) ?></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

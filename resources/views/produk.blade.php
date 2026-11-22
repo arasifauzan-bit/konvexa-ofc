@@ -7,6 +7,15 @@
     <title>Semua Produk | Konvexa Apparel</title>
     <meta name="description" content="Katalog lengkap produk Konvexa Apparel — konveksi murah berkualitas untuk kaos, kemeja, seragam, dan apparel custom.">
     <meta name="theme-color" content="#171717">
+    <link rel="canonical" href="{{ route('produk.index') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:site_name" content="Konvexa Apparel">
+    <meta property="og:title" content="Katalog Produk | Konvexa Apparel">
+    <meta property="og:description" content="Jelajahi katalog kaos, polo, kemeja, seragam, dan apparel custom dari Konvexa Apparel.">
+    <meta property="og:url" content="{{ route('produk.index') }}">
+    <meta property="og:image" content="{{ asset('image/hero-apparel-feature.png') }}">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" sizes="64x64" href="{{ asset('favicon-konvexa.png') }}?v=1">
 
     <script src="https://cdn.tailwindcss.com"></script>
